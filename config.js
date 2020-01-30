@@ -16,6 +16,7 @@
 const nconf = require('nconf');
 const path = require('path');
 const shajs = require('sha.js');
+const functions = require('firebase-functions');
 
 const {decodeBase64} = require('tweetnacl-util');
 
@@ -48,6 +49,23 @@ if (fs.existsSync(secretPath)) {
   ) {
     nconf.set('GOOGLE_CALLBACK_URL', contents['redirect_uris'][0]);
   }
+}
+
+const id = functions.config().google.client.id;
+if (id) {
+  nconf.set('GOOGLE_CLIENT_ID', id);
+}
+const secret = functions.config().google.client.secret;
+if (secret) {
+  nconf.set('GOOGLE_CLIENT_SECRET', secret);
+}
+const url = functions.config().google.callback.url;
+if (url) {
+  nconf.set('GOOGLE_CALLBACK_URL', url);
+}
+const project = functions.config().gcp.project;
+if (project) {
+  nconf.set('GCP_PROJECT', project);
 }
 
 nconf.required([
